@@ -1,0 +1,58 @@
+<ion-header [translucent]="true" class="ion-no-border">
+  <ion-toolbar  color="dark">
+    <ion-title>visitas</ion-title>
+    <ion-buttons slot="end" class="ion-padding">
+      <ion-button (click)="refrescar()" expand="block" fill="clear" shape="round">
+        <ion-icon name="refresh-circle-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+      <ion-button (click)="logout()" expand="block" fill="clear" shape="round">
+        <ion-icon slot="icon-only" name="log-out-outline"></ion-icon>        
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  
+<!-- SIN INFINITE SCROLL Y SIN REFRESHER PORQUE ME CAMBIA LA DATA SI TRABAJO CON EL STORAGE --> 
+  
+    <ion-list>
+      <ion-item-sliding *ngFor="let visita of visitas">     
+
+              <ion-item-options side="start">
+                <ion-item-option (click)="updateVisita(visita)">
+                  <ion-icon slot="icon-only" name="locate-outline"></ion-icon>
+                </ion-item-option>
+              </ion-item-options>
+
+              <ion-item>
+
+                <ion-card color="dark" class="ion-padding card">
+                  <ion-card-title *ngFor="let pdv of pdvs">
+                    <h4 *ngIf="pdv.id === visita.pdv_id">{{ pdv.nombre }}</h4>
+                  </ion-card-title>
+                  <ion-card-subtitle *ngFor="let marca of marcas">
+                    <span *ngIf="marca.id === visita.marca_id">
+                      {{ marca.nombre }}-{{ visita['fecha_prog'] | date:"mediumDate" }}
+                    </span>
+                  </ion-card-subtitle>
+                </ion-card>
+
+                <ion-card-content *ngIf="visita.estado !== 1">                  
+                  <ion-icon slot="icon-only" name="locate-outline" *ngIf="visita.estado === 2" color="success"></ion-icon>
+                  <ion-icon slot="icon-only" name="calculator-outline" *ngIf="visita.estado === 3" color="success"></ion-icon>
+                </ion-card-content>
+
+              </ion-item>
+          
+              <ion-item-options side="end">
+                <ion-item-option (click)="visitaItems(visita)" color="tertiary">
+                  <ion-icon slot="icon-only" name="calculator-outline"></ion-icon>
+                </ion-item-option>
+              </ion-item-options>
+
+      </ion-item-sliding>
+    </ion-list>
+   
+
+</ion-content>

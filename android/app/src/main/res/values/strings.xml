@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">mercatrack</string>
+    <string name="title_activity_main">mercatrack</string>
+    <string name="package_name">io.mercatrack.santi</string>
+    <string name="custom_url_scheme">io.mercatrack.santi</string>
+</resources>

@@ -4,6 +4,7 @@ import { environment } from '../../environments/environment';
 import { UsuarioService } from './usuario.service';
 import { Storage } from '@ionic/storage';
 import { RootObject, Visita } from '../interfaces/interfaces';
+import { FileTransfer, FileUploadOptions, FileTransferObject } from '@ionic-native/file-transfer/ngx';
 
 const URL = environment.url;
 
@@ -18,7 +19,8 @@ export class VisitasService {
 
   constructor( private http: HttpClient,
                private usuarioService: UsuarioService,
-               private storage: Storage ) {
+               private storage: Storage,
+               private fileTransfer: FileTransfer ) {
     this.usuario = this.usuarioService.usuario;
     this.token = this.usuarioService.token;
   }
@@ -65,6 +67,25 @@ export class VisitasService {
 
     return this.http.put( `${ URL }/auth/visitas/update/${ visita.id }`, visita, { headers } );
 
+  }
+
+  subirImagen( img: string ) { // supuestamente img es el mismo imageData que devuelve camera.getPicture = imageData
+    const options: FileUploadOptions = {
+      fileKey: 'img',
+      headers: {
+        'Authorization': `Bearer ${ this.token }`
+      }
+    };
+
+    const fileTransfer: FileTransferObject = this.fileTransfer.create();
+
+    // fileTransfer.upload('SOURCE_FILE_PATH in the device', 'API_ENDPOINT', options)
+    fileTransfer.upload( img, `${ URL }/api/auth/uploadImg`)
+      .then( data => {
+        console.log(data);
+      }).catch( err => {
+          console.log('Error en carga!', err);
+      });
   }
 
 }

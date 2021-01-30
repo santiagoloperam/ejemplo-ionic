@@ -32,8 +32,7 @@ itemslist: Item[] = [];
 
   constructor( private usuarioService: UsuarioService,
                private navCtrl: NavController,
-               private uiService: UiServiceService,
-               private visitaItemsService: VisitaItemsService ) { }
+               private uiService: UiServiceService) { }
 
   ngOnInit() {
     // this.slides.lockSwipes( true );
@@ -48,8 +47,7 @@ itemslist: Item[] = [];
 
     if ( valido ) {
       // Navegar a Visitas
-      this.itemslist = await this.visitaItemsService.getAllItems(); // GetAllitems debe conseguir los items referenciados no con el 
-      // admin sino con la empresa_id de los items y a la que pertenece el mercaderista user del token
+      
       this.navCtrl.navigateRoot('visitas', { animated: true });
       console.log(this.itemslist);
       this.uiService.presentToast('Usuario y contraseña correctos');

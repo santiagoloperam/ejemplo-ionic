@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { VisitasService } from '../../services/visitas.service';
 import { ModalController, AlertController, NavController } from '@ionic/angular';
 import { UpdateVisitaPage } from '../update-visita/update-visita.page';
-import { Pdv, Visita, Marca } from '../../interfaces/interfaces';
+import { Pdv, Visita, Marca, Item } from '../../interfaces/interfaces';
 import { UiServiceService } from '../../services/ui-service.service';
 import { VisitaItemsService } from '../../services/visita-items.service';
 
@@ -24,6 +24,7 @@ export class VisitasPage implements OnInit {
                private visitaItemsService: VisitaItemsService,
                private navCtrl: NavController ) { }
 
+    
   ngOnInit() {
     this.visitasService.getVisitas()
         .subscribe( async resp => {
@@ -32,6 +33,9 @@ export class VisitasPage implements OnInit {
           this.visitas = await this.visitasService.getStorageVisitas();
           this.marcas = resp.marcas;
           this.pdvs = resp.pdvs;
+          // GetAllitems debe conseguir los items referenciados no con el 
+        // admin sino con la empresa_id de los items y a la que pertenece el mercaderista user del token
+          await this.visitaItemsService.getAllItems();
         });
   }
 
@@ -84,7 +88,7 @@ export class VisitasPage implements OnInit {
         if ( resp.visitas_items.length === 0 ) {
           this.ui.presentToast('Sin Items Registrados');
         } else {        
-          this.navCtrl.navigateForward(`items-visita/:${ visitaId }`, { animated: true }); //NECESITO MANDAR EL ID DE LA VISITA PARA RENDERIZAR LOS ITEMS
+          this.navCtrl.navigateForward(`items-visita/${ visitaId }`, { animated: true }); //NECESITO MANDAR EL ID DE LA VISITA PARA RENDERIZAR LOS ITEMS
         }
       });
     

@@ -30,9 +30,8 @@ const routes: Routes = [
     canLoad: [ UsuarioGuard ]
   },
   {
-    path: 'itemsvisita/:id',
-    loadChildren: () => import('./pages/items-visita/items-visita.module').then( m => m.ItemsVisitaPageModule),
-    canLoad: [ UsuarioGuard ]
+    path: 'items-visita/:id',
+    loadChildren: () => import('./pages/items-visita/items-visita.module').then( m => m.ItemsVisitaPageModule)
   },
 ];
 

@@ -38,7 +38,7 @@ export class VisitaItemsService {
       //'Accept': 'application/json',
       'Authorization': `Bearer ${ this.token }`
     });
-    console.log('token desde headers de items');
+    console.log('token para conseguir allItems al ingresar a visitas');
     console.log(this.token);
     await this.http.get<RespItems>(`${ URL }/auth/items`, { headers } )
       .subscribe( resp => {

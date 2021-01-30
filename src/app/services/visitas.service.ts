@@ -104,7 +104,7 @@ export class VisitasService {
       });
   }
 
-  visitaItems1( visitaId ) {
+  visitaItems1( visitaId: number ) {
     // end point para devolver todos los items y listarlos para luego pasar a la interfaz que actualiza visitaItems
     const headers = new HttpHeaders({
       'Accept': 'application/json',

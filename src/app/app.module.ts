@@ -15,6 +15,9 @@ import { AppRoutingModule } from './app-routing.module';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { Camera } from '@ionic-native/camera/ngx';
 import { FileTransfer } from '@ionic-native/file-transfer/ngx';
+import { UpdateVisitaPageModule } from './pages/update-visita/update-visita.module';
+import { InventarioPageModule } from './pages/inventario/inventario.module';
+
 
 
 @NgModule({
@@ -25,6 +28,8 @@ import { FileTransfer } from '@ionic-native/file-transfer/ngx';
             IonicModule.forRoot(),
             AppRoutingModule,
             HttpClientModule,
+            UpdateVisitaPageModule,
+            InventarioPageModule,
             IonicStorageModule.forRoot()
           ],
   providers: [

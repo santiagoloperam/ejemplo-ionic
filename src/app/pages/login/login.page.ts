@@ -3,6 +3,8 @@ import { NgForm } from '@angular/forms';
 import { IonSlides, NavController } from '@ionic/angular';
 import { UsuarioService } from '../../services/usuario.service';
 import { UiServiceService } from '../../services/ui-service.service';
+import { VisitaItemsService } from '../../services/visita-items.service';
+import { Item } from '../../interfaces/interfaces';
 
 @Component({
   selector: 'app-login',
@@ -25,9 +27,13 @@ loginUser = {
   password: ''
 };
 
+itemslist: Item[] = [];
+
+
   constructor( private usuarioService: UsuarioService,
                private navCtrl: NavController,
-               private uiService: UiServiceService ) { }
+               private uiService: UiServiceService,
+               private visitaItemsService: VisitaItemsService ) { }
 
   ngOnInit() {
     // this.slides.lockSwipes( true );
@@ -42,8 +48,10 @@ loginUser = {
 
     if ( valido ) {
       // Navegar a Visitas
+      this.itemslist = await this.visitaItemsService.getAllItems(); // GetAllitems debe conseguir los items referenciados no con el 
+      // admin sino con la empresa_id de los items y a la que pertenece el mercaderista user del token
       this.navCtrl.navigateRoot('visitas', { animated: true });
-      console.log(valido);
+      console.log(this.itemslist);
       this.uiService.presentToast('Usuario y contraseña correctos');
     } else {
       // Mostrar alerta de usuario y contraseña no correctos

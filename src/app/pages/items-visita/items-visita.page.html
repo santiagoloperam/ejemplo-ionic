@@ -1,0 +1,49 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title><h5>{{ pdv }}</h5> <h6>{{ marca }}</h6></ion-title>
+    
+
+    <ion-buttons slot="end">
+      <ion-button (click)="salir()">
+        <ion-icon name="close-circle-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-no-padding">
+
+  <ion-list>
+    <ion-item-sliding *ngFor="let item of items">     
+
+            <ion-item-options side="start" color="tertiary">
+              <ion-item-option (click)="updateItem(item)">
+                <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+              </ion-item-option>
+            </ion-item-options>
+
+            <ion-item>
+
+              <ion-card color="tertiary" class="ion-no-padding card">
+                <ion-card-title *ngFor="let it of items0">
+                  <ion-row *ngIf="it.id === item.item_id">
+                    <ion-col size="4"><h4>{{ it.nomenclatura }}</h4></ion-col>
+                    <ion-col size="8" class="ion-text-end"><h6>{{ it.descripcion }}</h6></ion-col>
+                  </ion-row> 
+                </ion-card-title>                
+              </ion-card>
+
+            </ion-item>
+        
+           <!--  <ion-item-options side="end">
+              <ion-item-option (click)="visitaItemsUpload(item)" color="success">
+                <ion-icon slot="icon-only" name="cloud-upload-outline"></ion-icon>
+              </ion-item-option>
+            </ion-item-options> -->
+
+    </ion-item-sliding>
+  </ion-list>
+ 
+
+</ion-content>

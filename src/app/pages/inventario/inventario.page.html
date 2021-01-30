@@ -1,0 +1,56 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Inventario</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="salir()">
+        <ion-icon name="close-circle-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-no-padding">
+ 
+  <ion-list>
+
+    <ion-item>
+      <ion-label>Cantidad en Almacen</ion-label>
+      <ion-input [(ngModel)]="item.cantidad_almacen" type="number"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Cantidad en Bodega</ion-label>
+      <ion-input [(ngModel)]="item.cantidad_bodega" type="number"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Cantidad en Sistema</ion-label>
+      <ion-input [(ngModel)]="item.cantidad_sistema" type="number"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Nota</ion-label>
+      <ion-textarea placeholder="Información adicional..." [(ngModel)]="item.nota"></ion-textarea>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Fecha de Vencimiento (mínima o general)</ion-label>
+      <ion-input [(ngModel)]="fecha_vencimiento_min" (click)="selectedDate()" type="text"></ion-input>
+    </ion-item>
+
+
+    <ion-row postion="bottom">
+      <ion-col size="12">
+        <ion-button expand="full"
+                    shape="round"
+                    (click)="updateItem(item)">
+                    <ion-icon name="cloud-upload-outline" slot="icon-only"></ion-icon>
+          Subir registro de Item
+        </ion-button>
+      </ion-col>
+      
+    </ion-row>
+    
+  </ion-list>
+
+</ion-content>

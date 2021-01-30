@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { VisitasService } from '../../services/visitas.service';
-import { ModalController, AlertController } from '@ionic/angular';
+import { ModalController, AlertController, NavController } from '@ionic/angular';
 import { UpdateVisitaPage } from '../update-visita/update-visita.page';
 import { Pdv, Visita, Marca } from '../../interfaces/interfaces';
 import { UiServiceService } from '../../services/ui-service.service';
+import { VisitaItemsService } from '../../services/visita-items.service';
 
 @Component({
   selector: 'app-visitas',
@@ -19,7 +20,9 @@ export class VisitasPage implements OnInit {
   constructor( private visitasService: VisitasService,
                private modalCtrl: ModalController,
                private ui: UiServiceService,
-               private alertCtrl: AlertController ) { }
+               private alertCtrl: AlertController,
+               private visitaItemsService: VisitaItemsService,
+               private navCtrl: NavController ) { }
 
   ngOnInit() {
     this.visitasService.getVisitas()
@@ -72,8 +75,19 @@ export class VisitasPage implements OnInit {
 
 
 
-  visitaItems(itemId: number) {
-    // Con el id de la visita trae los items de la marca (visitaItems) y actualiza cada visita item
+  visitaItems(visitaId: number) {
+    // Con el id de la visita trae los items de esta (visitaItems) y actualiza cada visita item
+    // El botón morado de calculadora de la visita
+    this.visitasService.visitaItems1(visitaId)
+      .subscribe( async resp => {
+        await this.visitaItemsService.setVisitaItems( visitaId, resp );
+        if ( resp.visitas_items.length === 0 ) {
+          this.ui.presentToast('Sin Items Registrados');
+        } else {        
+          this.navCtrl.navigateForward(`items-visita/:${ visitaId }`, { animated: true }); //NECESITO MANDAR EL ID DE LA VISITA PARA RENDERIZAR LOS ITEMS
+        }
+      });
+    
   }
 
   async refrescar() {

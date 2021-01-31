@@ -1,8 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Item, Visitasitem } from '../../interfaces/interfaces';
 import { ModalController, Platform } from '@ionic/angular';
-import { DatePicker } from '@ionic-native/date-picker/ngx'
-import { DatePipe } from '@angular/common';
+//import { DatePicker } from '@ionic-native/date-picker/ngx';
+// import { DatePipe } from '@angular/common';
 import { VisitaItemsService } from '../../services/visita-items.service';
 
 @Component({
@@ -20,13 +20,13 @@ fecha_vencimiento_min: string = ""; // Voy a iniciar solo con una fecha de venci
 updated = false;
 
   constructor( private modalCtrl: ModalController,
-                public datePicker: DatePicker,
-                public datePipe: DatePipe,
+                // public datePicker: DatePicker,
+                // public datePipe: DatePipe,
                 public platform: Platform,
                 public visitaItemsService: VisitaItemsService ) {
-                  this.platform.ready().then( () => {
-                    this.fecha_vencimiento_min = this.datePipe.transform( new Date, "dd-MM-yyyy" );
-                  });
+                  /* this.platform.ready().then( () => {
+                    this.fecha_vencimiento_min = this.datePipe.transform( new Date, "yyyy-MM-dd" );
+                  }); */
                  }
 
   async ionViewWillEnter() {
@@ -36,7 +36,7 @@ updated = false;
     if ( this.itemStorage !== null ) {
       this.item = this.itemStorage
     } else {
-      // Sino item sigue vacio con los ids como viene del input de los params del modal
+      // Sino item sigue vacio con los ids y data como viene del input de los params del modal
     }
     
   }
@@ -44,7 +44,7 @@ updated = false;
   ngOnInit() {
   }
 
-  selectedDate() {
+/*   selectedDate() {
     var options = {
       date: new Date,
       mode: 'date',
@@ -54,7 +54,7 @@ updated = false;
       .then( (date) => {
         this.fecha_vencimiento_min = this.datePipe.transform( date, "dd-MM-yyyy" );
       });
-  }
+  } */
 
   updateItem( item: Visitasitem ) {
     // HACER LOS NGMODEL Y SETEAR LA VISITAITEM PARA ACTUALISAR EN EL SERVICE visitaItemsService

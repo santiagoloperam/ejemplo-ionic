@@ -71,7 +71,7 @@ async ionViewWillEnter(){ // Carga primero la data y luego la página
     this.navCtrl.navigateRoot('visitas');
   }
 
-  async updateItem( item: Item ) {
+  async updateItem( item: Visitasitem ) { // si esta een el storage antes de cargar componente inventario lo seteo en ionVIewWillEnter
     const modal = await this.modalCtrl.create({
       component: InventarioPage,
       cssClass: 'my-custom-class',

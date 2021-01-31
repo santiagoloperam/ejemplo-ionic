@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar  color="dark">
     <ion-title>Inventario</ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="salir()">
@@ -35,7 +35,8 @@
 
     <ion-item>
       <ion-label position="floating"><h6>Fecha de Vencimiento</h6></ion-label>
-      <ion-input [(ngModel)]="item.fecha_vencimiento_min" type="date" value="item.fecha_vencimiento_min"></ion-input>
+      <ion-label position="floating"><h6>{{ item.fecha_vencimiento_min }}</h6></ion-label>
+      <ion-input [(ngModel)]="item.fecha_vencimiento_min" type="date" ></ion-input>
     </ion-item>
 
     <!-- <ion-item>

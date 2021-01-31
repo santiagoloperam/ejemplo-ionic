@@ -15,7 +15,7 @@ export class InventarioPage implements OnInit {
 @Input() item: Visitasitem;
 @Input() item0: Item[] = []; 
 itemStorage: Visitasitem; // Para ver si el item ya tenia info en el storage
-fecha_vencimiento_min: string = ""; // Voy a iniciar solo con una fecha de vencimiento
+// fecha_vencimiento_min: string = ""; // Voy a iniciar solo con una fecha de vencimiento
 // fecha_vencimiento_max: string = "";
 updated = false;
 
@@ -58,7 +58,7 @@ updated = false;
 
   updateItem( item: Visitasitem ) {
     // HACER LOS NGMODEL Y SETEAR LA VISITAITEM PARA ACTUALISAR EN EL SERVICE visitaItemsService
-    item.fecha_vencimiento_min = this.fecha_vencimiento_min;
+    // item.fecha_vencimiento_min = this.fecha_vencimiento_min;
     this.visitaItemsService.updateVisitaItem( item ); 
      
     // VACIAR EL STORAGE SOLO DE LOS ITEMS DE ESA VISITA ??? cuando se maneje storage con item

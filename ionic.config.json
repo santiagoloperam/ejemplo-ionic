@@ -1,7 +1,6 @@
 {
   "name": "mercatrack",
   "integrations": {
-    "cordova": {},
     "capacitor": {}
   },
   "type": "angular"

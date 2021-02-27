@@ -6,7 +6,7 @@ import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { IonicStorageModule } from '@ionic/storage';
 
 import { AppComponent } from './app.component';
@@ -17,6 +17,7 @@ import { Camera } from '@ionic-native/camera/ngx';
 import { FileTransfer } from '@ionic-native/file-transfer/ngx';
 import { UpdateVisitaPageModule } from './pages/update-visita/update-visita.module';
 import { InventarioPageModule } from './pages/inventario/inventario.module';
+//import { InterceptorService } from './services/interceptor.service';
 
 
 
@@ -38,7 +39,12 @@ import { InventarioPageModule } from './pages/inventario/inventario.module';
     Geolocation,
     Camera,
     FileTransfer,
-    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+  /*   {
+      provide: HTTP_INTERCEPTORS,
+      useClass: InterceptorService,
+      multi: true
+    } */
   ],
   bootstrap: [AppComponent]
 })

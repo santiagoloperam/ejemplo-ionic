@@ -14,7 +14,7 @@ const routes: Routes = [
     pathMatch: 'full'
   },
   {
-    path: 'login',
+    path: 'login', //NO HAY LOGOUT PORQUE AL BORRAR EL STORAGE QUEDA SIN JWT
     loadChildren: () => import('./pages/login/login.module').then( m => m.LoginPageModule)
   },
   {

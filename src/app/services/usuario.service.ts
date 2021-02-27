@@ -87,20 +87,11 @@ export class UsuarioService {
     }
     // Si existe el token que continue con la validación normal o RESOLVE(TRUE) ya que hay token y usuario
     console.log('token ok DESDE VALIDAR TOKEN');
-
     
       return new Promise<boolean>( resolve => {
-        // console.log('desde la promesa');
-        // console.log(this.token);
-        // console.log(this.usuario);
+        
         const headers = new HttpHeaders({
-          // 'Accept': '*/*',
-          // 'Accept': 'application/json',
-          // 'Accept-Encoding': 'gzip,deflate,br',
-          // 'Connection': 'keep-alive',
-          // 'X-Requested-With': 'XMLHttpRequest',
-          // 'Content-Type': 'application/x-www-form-urlencoded',
-          // 'Content-Type': 'application/json',
+        
           'Authorization': `Bearer ${ this.token }`
         });
         this.http.get<Usuario>(`${ URL }/auth/me`, {headers})
@@ -111,40 +102,40 @@ export class UsuarioService {
                 // Carga el usuario del end point si el token es valido
                 this.usuario = resp;
                 resolve( true );
-              } else {           
+              } else {          
                 
-                return new Promise<boolean>( resolve => {
-                  // console.log('desde la promesa del catch');
-                  const headers = new HttpHeaders({
-                    'Accept': 'application/json',
-                    // 'Accept-Encoding': 'gzip,deflate,br',
-                    // 'Connection': 'keep-alive',
-                    // 'X-Requested-With': 'XMLHttpRequest',
-                    // 'Content-Type': 'application/x-www-form-urlencoded',
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${ this.token }`
-                  });
-                  this.http.post<Refresh>(`${ URL }/auth/refresh`, {}, {headers})
-                      .subscribe( resp => {
-                        if ( resp ) {
-                          console.log('adentro de la promesa con  REFRESH');
-                          console.log(resp);
-                          // Carga el usuario del end point si el token es valido
-                          // cargar nuevo token
-                          this.token = resp.access_token;
-                          this.validaToken();
-                          resolve( true );
-                        } else {
-                          this.navCtrl.navigateRoot('login');
-                          resolve( false );
-                        }
-                      });
-                });
+                this.navCtrl.navigateRoot('login');
               }
             });
       });   
    
 
   } // FIN DE VALIDA TOKEN
+
+  refreshToken() { // REFRESHER TOKEN PARA CUANDO SEPA COMO HACERLO Y NO EXPIRE SESION ACTIVAR EL INTERCEPTOR EN app.module
+    return new Promise<boolean>( resolve => {
+      // console.log('desde la promesa del catch');
+      const headers = new HttpHeaders({
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${ this.token }`
+      });
+      this.http.post<Refresh>(`${ URL }/auth/refresh`, {}, {headers})
+          .subscribe( resp => {
+            if ( resp ) {
+              console.log('adentro de la promesa con  REFRESH');
+              console.log(resp);
+              // Carga el usuario del end point si el token es valido
+              // cargar nuevo token
+              this.token = resp.access_token;
+              this.validaToken();
+              resolve( true );
+            } else {
+              this.navCtrl.navigateRoot('login');
+              resolve( false );
+            }
+          });
+    });
+  }
 
 }

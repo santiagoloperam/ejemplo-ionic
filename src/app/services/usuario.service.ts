@@ -1,7 +1,11 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { async } from '@angular/core/testing';
 import { NavController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
+import { rejects } from 'assert';
+import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { RespuestaLogin, Usuario, Refresh } from '../interfaces/interfaces';
 import { VisitaItemsService } from './visita-items.service';
@@ -15,6 +19,8 @@ export class UsuarioService {
 
   token: string = null;
   usuario: Usuario = {};
+  lastLogin = null;
+  renovating = false;
 
   constructor( private http: HttpClient,
                private storage: Storage,
@@ -57,7 +63,9 @@ export class UsuarioService {
 
   async guardarToken( token: string ) {
     this.token = token;
+    this.lastLogin = Date.now();
     await this.storage.set( 'token', this.token );
+    await this.storage.set('lastLogin', this.lastLogin);
 
     this.validaToken();
   }
@@ -65,77 +73,83 @@ export class UsuarioService {
   async guardarUsuario( user: Usuario ) {
     this.usuario = user;
     await this.storage.set( 'usuario', this.usuario );
-    // console.log((this.storage.get('usuario')));
   }
 
   async cargarToken() {
     this.token =  await this.storage.get('token') || null;
     this.usuario = await this.storage.get('usuario');
+    this.lastLogin = await this.storage.get('lastLogin');
   }
 
-
-
-
+  /* 
+   * Intenta obtener el token del storage, lo resuelve y si no hay token lo redirige al login.
+   */
   async validaToken(): Promise<boolean> {
-    // Cargar token del storage
-    await this.cargarToken();
-    // Si el token aun no existe resolvemos un falso
-    if ( !this.token ) {
-      this.navCtrl.navigateRoot('login');
-      console.log('token null');
-      return Promise.resolve( false );
+    if (!this.token) {
+      await this.cargarToken();
+
+      if (!this.token) {
+        this.navCtrl.navigateRoot('login');
+
+        return Promise.reject(false);
+      }
     }
-    // Si existe el token que continue con la validación normal o RESOLVE(TRUE) ya que hay token y usuario
-    console.log('token ok DESDE VALIDAR TOKEN');
     
-      return new Promise<boolean>( resolve => {
-        
-        const headers = new HttpHeaders({
-        
-          'Authorization': `Bearer ${ this.token }`
-        });
-        this.http.get<Usuario>(`${ URL }/auth/me`, {headers})
-            .subscribe( resp => {
-              if ( resp.id ) {
-                console.log('adentro de la promesa con ME');
-                console.log(resp);
-                // Carga el usuario del end point si el token es valido
-                this.usuario = resp;
-                resolve( true );
-              } else {          
-                
-                this.navCtrl.navigateRoot('login');
-              }
-            });
-      });   
-   
+    await this.verifyLastLogin();
 
-  } // FIN DE VALIDA TOKEN
+    return Promise.resolve(true);
+  }
 
-  refreshToken() { // REFRESHER TOKEN PARA CUANDO SEPA COMO HACERLO Y NO EXPIRE SESION ACTIVAR EL INTERCEPTOR EN app.module
-    return new Promise<boolean>( resolve => {
-      // console.log('desde la promesa del catch');
-      const headers = new HttpHeaders({
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${ this.token }`
-      });
-      this.http.post<Refresh>(`${ URL }/auth/refresh`, {}, {headers})
-          .subscribe( resp => {
-            if ( resp ) {
-              console.log('adentro de la promesa con  REFRESH');
-              console.log(resp);
-              // Carga el usuario del end point si el token es valido
-              // cargar nuevo token
-              this.token = resp.access_token;
-              this.validaToken();
-              resolve( true );
-            } else {
-              this.navCtrl.navigateRoot('login');
-              resolve( false );
-            }
-          });
+  async verifyLastLogin() {
+    if (!this.renovating && this.lastLogin) {
+      const now = (Date.now() / 60000);
+      const lastLogin = (this.lastLogin / 60000);
+
+      if (now - lastLogin > 1440) {
+        this.renovating = true;
+
+        const { access_token } = await this.refreshToken().toPromise();
+        await this.guardarToken(access_token);
+
+        const user = await this.getUserWithTokenAccess().toPromise();
+        await this.guardarUsuario(user);
+
+        this.renovating = false;
+      }
+    }
+  }
+
+  /* 
+   * Obtener detalles del usuario con el token
+   *
+   * @param String token = Token del usuario
+   * @return Observable<Usuario>
+   */
+  getUserWithTokenAccess(): Observable<Usuario> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.token}`
     });
+
+    return this.http.get<Usuario>(`${URL}/auth/me`, { headers }).pipe(
+      tap((user) => this.usuario = user)
+    );
+  }
+
+  /* 
+   * Generar un nuevo token
+   *
+   * @return Observable<{ access_token }>
+   */
+  refreshToken(): Observable<{ access_token }> {
+    const headers = new HttpHeaders({
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.token}`
+    });
+
+    return this.http.post<Refresh>(`${URL}/auth/refresh`, {}, { headers }).pipe(
+      tap(({ access_token }) => this.token = access_token)
+    );
   }
 
 }

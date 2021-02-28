@@ -37,8 +37,8 @@ export class UsuarioService {
             /* console.log(resp); */
             if ( resp.token ) {
               console.log('login con token y user ok!!!');
-              await this.guardarToken( resp.token.original.access_token);
-              await this.guardarUsuario( resp.user.original);
+              await this.guardarToken( resp.token.original.access_token); //guarda en el storage y en contexto token y lastLogin en minutos
+              await this.guardarUsuario( resp.user.original); //guarda usuario en el storage y en contexto 
               // console.log((this.usuario));
               // console.log(resp['token']['original']['access_token']);
               resolve( true );
@@ -105,7 +105,7 @@ export class UsuarioService {
       const now = (Date.now() / 60000);
       const lastLogin = (this.lastLogin / 60000);
 
-      if (now - lastLogin > 1440) {
+      if (now - lastLogin > 1) {
         this.renovating = true;
 
         const { access_token } = await this.refreshToken().toPromise();

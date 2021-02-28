@@ -15,7 +15,6 @@ export class UsuarioGuard implements CanLoad {
     console.log('Entro a guard UsuarioGuard');
 
     return this.usuarioService.validaToken();
-
   }
 
  /*  canActivate(): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
